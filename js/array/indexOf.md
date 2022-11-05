@@ -1,5 +1,7 @@
 # Array.prototype.indexOf()
 
+## 기본 동작
+
 ```javascript
 const sports = ['soccer', 'baseball', 'basketball', 'swimming'];
 
@@ -18,6 +20,8 @@ console.log(sports.indexOf('golf'));
 전달된 값과 동일한 요소를 찾았다면 해당 요소의 인덱스를 리턴하며, 그렇지 않으면 -1을 리턴합니다.
 
 두번째 인자가 전달되면, 해당 인덱스에 해당하는 위치에서부터 전달된 요소를 검색합니다.
+
+## 구현
 
 위의 특징을 기반으로 하여 메서드를 구현해보도록 하겠습니다.
 
@@ -64,7 +68,7 @@ Array.prototype.indexOf = function (value, from) {
 
 비교 연산자 `>=` 는 숫자형으로의 형변환을 발생시키기 때문에, 숫자가 아닌 값이 전달될 경우에는 결국 0으로 초기화됩니다.
 
-## 비어있는 요소 처리하기
+### 비어있는 요소 처리하기
 
 `indexOf()` 메서드는 배열에 비어있는 요소에 대해서는 검색을 하지 않습니다.
 
@@ -122,7 +126,7 @@ Array.prototype.indexOf = function (value, from) {
 
 이제 비어있는 요소와 `undefined` 를 구분할 줄 아는 `indexOf()` 메서드를 완성했습니다.
 
-## 유사배열 객체에 대한 indexOf() 메서드 실행
+### 유사배열 객체에 대한 indexOf() 메서드 실행
 
 `indexOf()` 메서드도 배열 뿐만 아니라 유사배열 객체에도 실행이 가능해야 합니다.
 

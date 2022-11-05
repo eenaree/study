@@ -1,5 +1,7 @@
 # Array.prototype.push()
 
+## 기본 동작
+
 `push()` 메서드는 인자로 받은 값을 메서드를 호출한 배열의 끝에 추가합니다.
 
 인자로 받는 값의 개수에는 제한이 없으며, 메서드를 호출한 배열의 새로운 길이를 리턴합니다.
@@ -20,6 +22,8 @@ sports.push('swimming', 'basketball');
 console.log(sports);
 // ['soccer', 'baseball', 'football', 'swimming', 'basketball'];
 ```
+
+## 구현
 
 위의 특징들을 가지고, `push()` 메서드를 간단하게 구현해보겠습니다.
 
@@ -44,7 +48,7 @@ Array.prototype.push = function () {
 };
 ```
 
-## 유사배열 객체에 대한 push() 메서드 실행
+### 유사배열 객체에 대한 push() 메서드 실행
 
 mdn 문서에 따르면, `push()` 메서드는 `this` 즉, 메서드를 호출한 객체의 `length` 프로퍼티를 읽고 `length` 프로퍼티에 해당하는 인덱스부터 전달받은 인자 값을 추가합니다.
 

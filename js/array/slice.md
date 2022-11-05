@@ -1,5 +1,7 @@
 # Array.prototype.slice()
 
+## 기본 동작
+
 ```javascript
 const sports = ['soccer', 'baseball', 'basketball', 'swimming'];
 
@@ -28,9 +30,7 @@ console.log(sports.slice());
 
 또한 배열을 복사하더라도 기존의 배열이 변경되지 않고, 새로운 배열을 리턴합니다.
 
-<br />
-
-이제 이러한 특징을 가지고 메서드를 구현해보겠습니다.
+## 구현
 
 메서드가 전달 받는 2개의 인자는 모두 필수 인자가 아니므로, 인자를 전달받지 않았을 때를 대비한 기본값이 필요할 것입니다.
 
@@ -65,7 +65,7 @@ Array.prototype.slice = function (start, end) {
 자바스크립트에서는 비교 연산자를 적용하기 앞서, 먼저 피연산자에 대해 숫자형으로 형변환이 이뤄지기 때문에 이와 관련된 특별한 코드가 필요하지는 않습니다.  
 `undefined` 의 경우, 숫자형으로 변환시 `NaN` 으로 변경되지만, 비교 연산자의 피연산자로 `NaN` 값이 올 경우에는 항상 false를 리턴합니다.
 
-## 유사배열 객체에 대한 slice() 메서드 실행
+### 유사배열 객체에 대한 slice() 메서드 실행
 
 `slice()` 메서드도 호출한 객체의 `length` 프로퍼티를 확인합니다.
 

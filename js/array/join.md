@@ -1,5 +1,7 @@
 # Array.prototype.join()
 
+## 기본 동작
+
 ```javascript
 const elements = ['Fire', 'Air', 'Water'];
 
@@ -20,6 +22,8 @@ console.log(elements.join(''));
 빈 문자열을 전달하게 되면, `,` 가 추가되지 않고 각 요소들끼리만 합쳐집니다.
 
 배열이 생성될 때, 내장 객체 생성자 함수인 Array가 호출되므로, Array 생성자 함수의 prototype 프로퍼티가 참조하는 프로토타입 객체에 `join()` 메서드가 구현되어 있습니다.
+
+## 구현
 
 위에 나타난 특징들을 가지고, for문과 if문을 이용하여 `join()` 메서드를 구현해보겠습니다.
 
@@ -44,7 +48,7 @@ Array.prototype.join = function (seperator = ',') {
 예를 들어, `[1, 2].join(3)` 과 같은 코드가 실행될 때, `seperator` 를 덧셈 연산자와 사용하게 되면, 숫자 간에 연산이 발생하게 되므로 이는 `join()` 메서드처럼 동작하지 않게 되죠.  
 따라서, 연산이 발생하지 않도록 빈 문자열을 중간에 넣어줍니다.
 
-<br />
+### undefined, null 처리하기
 
 하지만 제가 작성한 코드는 `join()` 메서드와 동일하게 동작하지 않습니다.
 
