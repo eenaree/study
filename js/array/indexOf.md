@@ -53,7 +53,7 @@ Array.prototype.indexOf = function (value) {
 
 ```javascript
 Array.prototype.indexOf = function (value, from) {
-  let fromIndex = (from >= 0 ? from : this.length + from) || 0; // 추가
+  const fromIndex = (from >= 0 ? from : this.length + from) || 0; // 추가
   for (let i = fromIndex; i < this.length; i++) {
     if (this[i] === value) return i;
   }
@@ -110,7 +110,7 @@ arr = {
 
 ```javascript
 Array.prototype.indexOf = function (value, from) {
-  let fromIndex = (from >= 0 ? from : this.length + from) || 0;
+  const fromIndex = (from >= 0 ? from : this.length + from) || 0;
   for (let i = fromIndex; i < this.length; i++) {
     if (i in this === false) continue; // 추가
     if (this[i] === value) return i;
