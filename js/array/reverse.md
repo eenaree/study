@@ -1,5 +1,11 @@
 # Array.prototype.reverse()
 
+## Syntax
+
+```javascript
+reverse();
+```
+
 ## 기본 동작
 
 ```javascript

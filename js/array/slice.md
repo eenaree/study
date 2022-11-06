@@ -1,5 +1,13 @@
 # Array.prototype.slice()
 
+## Syntax
+
+```javascript
+slice();
+slice(start);
+slice(start, end);
+```
+
 ## 기본 동작
 
 ```javascript

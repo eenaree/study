@@ -1,5 +1,13 @@
 # Array.prototype.push()
 
+## Syntax
+
+```javascript
+push(element0);
+push(element0, element1);
+push(element0, element1, /* … ,*/ elementN);
+```
+
 ## 기본 동작
 
 `push()` 메서드는 인자로 받은 값을 메서드를 호출한 배열의 끝에 추가합니다.

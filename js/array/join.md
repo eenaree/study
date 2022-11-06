@@ -1,5 +1,12 @@
 # Array.prototype.join()
 
+## Syntax
+
+```javascript
+join();
+join(separator);
+```
+
 ## 기본 동작
 
 ```javascript

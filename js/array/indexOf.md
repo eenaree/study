@@ -1,5 +1,12 @@
 # Array.prototype.indexOf()
 
+## Syntax
+
+```javascript
+indexOf(searchElement);
+indexOf(searchElement, fromIndex);
+```
+
 ## 기본 동작
 
 ```javascript
