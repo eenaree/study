@@ -72,31 +72,3 @@ Array.prototype.slice = function (start, end) {
 
 자바스크립트에서는 비교 연산자를 적용하기 앞서, 먼저 피연산자에 대해 숫자형으로 형변환이 이뤄지기 때문에 이와 관련된 특별한 코드가 필요하지는 않습니다.  
 `undefined` 의 경우, 숫자형으로 변환시 `NaN` 으로 변경되지만, 비교 연산자의 피연산자로 `NaN` 값이 올 경우에는 항상 false를 리턴합니다.
-
-### 유사배열 객체에 대한 slice() 메서드 실행
-
-`slice()` 메서드도 호출한 객체의 `length` 프로퍼티를 확인합니다.
-
-`length` 프로퍼티 값이 존재한다면, 배열을 복사할 수 있는 것이죠.  
-존재하지 않는다면, 어떤 요소도 복사되지 않고 빈 배열이 리턴돼야 합니다.
-
-앞서 작성한 코드는 시작 인덱스와 마지막 인덱스의 값을 설정할 때, `length` 프로퍼티 값을 이용하기 때문에 값이 존재하지 않는 경우에는 빈 배열이 리턴되도록 조건문을 추가해주겠습니다.
-
-```javascript
-Array.prototype.slice = function (start, end) {
-  if (!this.length) return []; // 추가
-
-  const startIndex = (start >= 0 ? start : this.length + start) || 0;
-  const endIndex = (end >= 0 ? end : this.length + end) || this.length;
-  const newArray = [];
-
-  for (let i = startIndex; i < endIndex; i++) {
-    if (i === this.length) break;
-    newArray[newArray.length] = this[i];
-  }
-
-  return newArray;
-};
-```
-
-이제 객체의 `length` 프로퍼티의 존재하지 않으면, 호출한 배열의 어떤 요소도 복사되지 않습니다.
