@@ -1,4 +1,5 @@
 const clearBtn = document.querySelector('#clear');
+const dotBtn = document.querySelector('#dot');
 const numberButtons = document.querySelectorAll('.number');
 const operatorButtons = document.querySelectorAll('.operator');
 const expression = document.querySelector('.expression');
@@ -24,7 +25,7 @@ for (const numberButton of numberButtons) {
 
     if (result) {
       if (operator === '') {
-        if (currentInput === 0) {
+        if (result.textContent === '0') {
           if (numberButton.textContent === '0') return;
           result.textContent = numberButton.textContent;
           currentInput = Number(result.textContent);
@@ -134,3 +135,18 @@ clearBtn?.addEventListener('click', () => {
   }
 });
 
+dotBtn?.addEventListener('click', () => {
+  // 현재 입력 숫자에 점이 포함되어 있다면, 점 입력 더이상 불가
+  // 두번째 숫자를 한번도 입력하지 않은 경우 => 0. 형태로 추가
+  // 한번이라도 입력한 경우 => 현재 숫자에 .만 붙임
+  if (result) {
+    if (Number.isInteger(currentInput)) {
+      if (isFirst) {
+        result.textContent = '0.';
+        isFirst = false;
+      } else {
+        result.textContent += '.';
+      }
+    }
+  }
+});
