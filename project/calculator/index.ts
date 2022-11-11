@@ -1,5 +1,6 @@
 const clearBtn = document.querySelector('#clear');
 const dotBtn = document.querySelector('#dot');
+const equalBtn = document.querySelector('#equal');
 const numberButtons = document.querySelectorAll('.number');
 const operatorButtons = document.querySelectorAll('.operator');
 const expression = document.querySelector('.expression');
@@ -9,6 +10,7 @@ let output = 0;
 let currentInput = 0;
 let operator = '';
 let isFirst = false;
+let equal = false;
 
 for (const numberButton of numberButtons) {
   numberButton.addEventListener('click', () => {
@@ -23,8 +25,16 @@ for (const numberButton of numberButtons) {
     // 두번째 숫자를 처음 입력하는 경우라면, 이전 첫번째 숫자를 화면에 보여주고, 입력한 숫자를 현재 숫자에 할당함.
     // 그게 아니라면, 현재 숫자의 오른쪽에 추가
 
-    if (result) {
+    if (result && expression) {
       if (operator === '') {
+        if (equal) {
+          expression.textContent = '';
+          result.textContent = numberButton.textContent;
+          currentInput = Number(result.textContent);
+          output = 0;
+          equal = false;
+          return;
+        }
         if (result.textContent === '0') {
           if (numberButton.textContent === '0') return;
           result.textContent = numberButton.textContent;
@@ -64,6 +74,13 @@ for (const operatorButton of operatorButtons) {
 
     if (result && expression && operatorButton.textContent) {
       if (operator === '') {
+        if (equal) {
+          operator = operatorButton.textContent;
+          expression.textContent = `${output} ${operator}`;
+          equal = false;
+          isFirst = true;
+          return;
+        }
         operator = operatorButton.textContent;
         output = currentInput;
         currentInput = 0;
@@ -96,7 +113,7 @@ for (const operatorButton of operatorButtons) {
             currentInput = 0;
             isFirst = true;
           }
-          
+
           return;
         }
 
@@ -147,6 +164,61 @@ dotBtn?.addEventListener('click', () => {
       } else {
         result.textContent += '.';
       }
+    }
+  }
+});
+
+equalBtn?.addEventListener('click', () => {
+  // 연산자가 존재하지 않는 경우 => 무시
+  // 연산자가 존재하는 경우 => 연산 실행
+  // 1. 두번째 숫자에 대해 첫 입력이 없었던 경우, 첫번째 숫자와 동일한 값으로 연산 실행
+  // 2. 한번이라도 입력이 있었던 경우, 첫번째 숫자와 그 숫자로 연산 실행
+
+  // 연산이 실행됐다면 => 표현식에 숫자들과 연산자, equal 까지 표현
+  // 연산이 실행된 후,
+  // 1. 숫자 클릭 => 클릭한 숫자만 현재 숫자로 보여주기(결과창), 그 이외 값은 초기화
+  // 2. 연산자 클릭 => 클릭한 연산자와 현재 결과를 합친 표현식 보여주기. 첫번째 입력 상태 여부 초기화
+
+  if (result && expression) {
+    if (operator === '') return;
+    if (isFirst) {
+      expression.textContent = `${output} ${operator} ${output} =`;
+      switch (operator) {
+        case '+':
+          output += output;
+          break;
+        case '-':
+          output -= output;
+          break;
+        case '*':
+          output *= output;
+          break;
+        case '÷':
+          output /= output;
+          break;
+      }
+      result.textContent = `${output}`;
+      operator = '';
+      equal = true;
+    } else {
+      expression.textContent = `${output} ${operator} ${currentInput} =`;
+      switch (operator) {
+        case '+':
+          output += currentInput;
+          break;
+        case '-':
+          output -= currentInput;
+          break;
+        case '*':
+          output *= currentInput;
+          break;
+        case '÷':
+          output /= currentInput;
+          break;
+      }
+      result.textContent = `${output}`;
+      operator = '';
+      equal = true;
     }
   }
 });
