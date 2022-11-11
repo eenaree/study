@@ -1,4 +1,5 @@
 const clearBtn = document.querySelector('#clear');
+const clearEntryBtn = document.querySelector('#clear_entry');
 const dotBtn = document.querySelector('#dot');
 const equalBtn = document.querySelector('#equal');
 const numberButtons = document.querySelectorAll('.number');
@@ -155,6 +156,23 @@ clearBtn?.addEventListener('click', () => {
     output = 0;
     currentInput = 0;
     operator = '';
+  }
+});
+
+clearEntryBtn?.addEventListener('click', () => {
+  // 현재 입력 숫자 삭제
+  // 수식 계산이 이뤄진 후에 클릭한 경우 => 전부 초기화
+  if (result && expression) {
+    if (equal) {
+      expression.textContent = '';
+      result.textContent = '0';
+      output = 0;
+      currentInput = 0;
+      operator = '';
+    } else {
+      currentInput = 0;
+      result.textContent = `${currentInput}`;
+    }
   }
 });
 
