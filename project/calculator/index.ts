@@ -49,10 +49,16 @@ for (const numberButton of numberButtons) {
           result.textContent = numberButton.textContent;
           currentInput = Number(result.textContent);
           isFirst = false;
-          return;
+        } else {
+          if (result.textContent === '0') {
+            if (numberButton.textContent === '0') return;
+            result.textContent = numberButton.textContent;
+            currentInput = Number(result.textContent);
+            return;
+          }
+          result.textContent += numberButton.textContent ?? '';
+          currentInput = Number(result.textContent);
         }
-        result.textContent += numberButton.textContent ?? '';
-        currentInput = Number(result.textContent);
       }
     }
   });
