@@ -25,18 +25,29 @@ const initStorage = () => {
 
 const isNotes = (
   values: unknown
-): values is { title: string; body: string }[] => {
+): values is { title: string; body: string; date: string }[] => {
   if (Array.isArray(values)) {
-    return values.every(value => 'title' in value && 'body' in value);
+    return values.every(
+      value => 'title' in value && 'body' in value && 'date' in value
+    );
   }
 
   return false;
 };
 
+const createNoteTemplate = () => ({
+  title: '제목',
+  body: '내용',
+  date: getTimestamp(),
+});
+
+const getTimestamp = () => new Date().toLocaleString();
+
 const addNote = () => {
   // 오른쪽 노트 컨텐츠에 새로운 노트를 생성한다
-  noteTitle.value = '제목';
-  noteBody.value = '내용';
+  const { title, body, date } = createNoteTemplate();
+  noteTitle.value = title;
+  noteBody.value = body;
   rightPanel.style.display = 'block';
 
   // 왼쪽 노트 리스트에 새 노트를 추가한다
@@ -45,14 +56,14 @@ const addNote = () => {
     const span = document.createElement('span');
     switch (i) {
       case 0:
-        span.textContent = noteTitle.value;
+        span.textContent = title;
         break;
       case 1:
-        span.textContent = noteBody.value;
+        span.textContent = body;
         span.classList.add('cont');
         break;
       case 2:
-        span.textContent = '날짜';
+        span.textContent = date;
         span.classList.add('date');
         break;
     }
@@ -68,10 +79,7 @@ const addNote = () => {
     if (isNotes(parsedNotes)) {
       localStorage.setItem(
         'notes',
-        JSON.stringify([
-          ...parsedNotes,
-          { title: noteTitle.value, body: noteBody.value },
-        ])
+        JSON.stringify([...parsedNotes, { title, body, date }])
       );
     }
   }
