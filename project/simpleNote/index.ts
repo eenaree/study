@@ -63,6 +63,12 @@ const addNote = () => {
 
   // 왼쪽 노트 리스트에 새 노트를 추가한다
   const newNote = document.createElement('div');
+  if (noteList?.children) {
+    for (const note of noteList.children) {
+      note.classList.remove('active');
+    }
+  }
+  newNote.classList.add('active');
   for (let i = 0; i < 3; i++) {
     const span = document.createElement('span');
     switch (i) {
