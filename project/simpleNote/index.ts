@@ -106,7 +106,7 @@ const getStorageNotes = () => {
   return [];
 };
 
-const renderNotes = () => {
+const renderNoteList = () => {
   notes.forEach(note => {
     const newDiv = document.createElement('div');
     if (note.id === currentNote?.id) {
@@ -133,7 +133,9 @@ const renderNotes = () => {
     }
     noteList?.appendChild(newDiv);
   });
+};
 
+const renderCurrentNote = () => {
   if (currentNote) {
     noteTitle.value = currentNote.title;
     noteBody.value = currentNote.body;
@@ -141,8 +143,34 @@ const renderNotes = () => {
   }
 };
 
+const openNote = (e: Event) => {
+  if (e.currentTarget instanceof HTMLElement) {
+    const currentTarget = e.currentTarget;
+    const matchedNote = notes.find(
+      value => value.id === Number(currentTarget.dataset.id)
+    );
+    if (!matchedNote) return;
+
+    currentNote = matchedNote;
+    if (noteList?.children) {
+      for (const sibling of noteList.children) {
+        sibling.classList.remove('active');
+      }
+    }
+    currentTarget.classList.add('active');
+    renderCurrentNote();
+  }
+};
+
 initStorage();
 notes = getStorageNotes();
 currentNote = notes.length > 0 ? notes[notes.length - 1] : null;
-renderNotes();
+renderNoteList();
+renderCurrentNote();
 addBtn?.addEventListener('click', addNote);
+
+if (noteList?.children) {
+  for (const note of noteList.children) {
+    note.addEventListener('click', openNote);
+  }
+}
