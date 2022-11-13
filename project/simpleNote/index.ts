@@ -16,6 +16,16 @@ if (!(rightPanel instanceof HTMLDivElement)) {
   throw new Error('rightPanel must be HTML Div Element');
 }
 
+interface Note {
+  id: number;
+  title: string;
+  body: string;
+  date: string;
+}
+
+let notes: Note[] = [];
+let currentNote: Note | null = null;
+
 const initStorage = () => {
   const storageNotes = localStorage.getItem('notes');
   if (!storageNotes) {
@@ -23,12 +33,11 @@ const initStorage = () => {
   }
 };
 
-const isNotes = (
-  values: unknown
-): values is { title: string; body: string; date: string }[] => {
+const isNotes = (values: unknown): values is Note[] => {
   if (Array.isArray(values)) {
     return values.every(
-      value => 'title' in value && 'body' in value && 'date' in value
+      value =>
+        'id' in value && 'title' in value && 'body' in value && 'date' in value
     );
   }
 
@@ -36,6 +45,7 @@ const isNotes = (
 };
 
 const createNoteTemplate = () => ({
+  id: notes.length > 0 ? notes[notes.length - 1].id + 1 : 1,
   title: '제목',
   body: '내용',
   date: getTimestamp(),
@@ -45,9 +55,10 @@ const getTimestamp = () => new Date().toLocaleString();
 
 const addNote = () => {
   // 오른쪽 노트 컨텐츠에 새로운 노트를 생성한다
-  const { title, body, date } = createNoteTemplate();
-  noteTitle.value = title;
-  noteBody.value = body;
+  const noteTemplate = createNoteTemplate();
+  notes.push(noteTemplate);
+  noteTitle.value = noteTemplate.title;
+  noteBody.value = noteTemplate.body;
   rightPanel.style.display = 'block';
 
   // 왼쪽 노트 리스트에 새 노트를 추가한다
@@ -56,14 +67,15 @@ const addNote = () => {
     const span = document.createElement('span');
     switch (i) {
       case 0:
-        span.textContent = title;
+        span.textContent = noteTemplate.title;
+        span.classList.add('title');
         break;
       case 1:
-        span.textContent = body;
+        span.textContent = noteTemplate.body;
         span.classList.add('cont');
         break;
       case 2:
-        span.textContent = date;
+        span.textContent = noteTemplate.date;
         span.classList.add('date');
         break;
     }
@@ -72,18 +84,59 @@ const addNote = () => {
   noteList?.appendChild(newNote);
 
   // 로컬스토리지에 새 노트를 추가한다
-  // 기존에 저장된 노트가 있다면, 그 노트에 뒤에 추가적으로 붙이기
+  localStorage.setItem('notes', JSON.stringify(notes));
+};
+
+const getStorageNotes = () => {
   const storageNotes = localStorage.getItem('notes');
-  if (storageNotes) {
-    const parsedNotes = JSON.parse(storageNotes);
-    if (isNotes(parsedNotes)) {
-      localStorage.setItem(
-        'notes',
-        JSON.stringify([...parsedNotes, { title, body, date }])
-      );
+
+  if (!storageNotes) return [];
+
+  const parsedNotes = JSON.parse(storageNotes);
+  if (isNotes(parsedNotes)) {
+    return parsedNotes;
+  }
+
+  return [];
+};
+
+const renderNotes = () => {
+  notes.forEach(note => {
+    const newDiv = document.createElement('div');
+    if (note.id === currentNote?.id) {
+      newDiv.classList.add('active');
     }
+    newDiv.dataset.id = `${note.id}`;
+    for (let i = 0; i < 3; i++) {
+      const span = document.createElement('span');
+      switch (i) {
+        case 0:
+          span.textContent = note.title;
+          span.classList.add('title');
+          break;
+        case 1:
+          span.textContent = note.body;
+          span.classList.add('cont');
+          break;
+        case 2:
+          span.textContent = note.date;
+          span.classList.add('date');
+          break;
+      }
+      newDiv.appendChild(span);
+    }
+    noteList?.appendChild(newDiv);
+  });
+
+  if (currentNote) {
+    noteTitle.value = currentNote.title;
+    noteBody.value = currentNote.body;
+    rightPanel.style.display = 'block';
   }
 };
 
 initStorage();
+notes = getStorageNotes();
+currentNote = notes.length > 0 ? notes[notes.length - 1] : null;
+renderNotes();
 addBtn?.addEventListener('click', addNote);

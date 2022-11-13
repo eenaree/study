@@ -51,6 +51,19 @@ main {
   color: lightslategrey;
 }
 
+#note_list .active {
+  background: lightgoldenrodyellow;
+  box-shadow: 1px 2px 6px rgba(0,0,0,0.2);
+}
+
+#note_list .active .title {
+  font-weight: 700;
+}
+
+#note_list .active .date {
+  font-weight: 700;
+}
+
 #right {
   display: none;
   width: 70%;
