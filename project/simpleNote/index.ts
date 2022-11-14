@@ -31,14 +31,21 @@ interface Note {
   date: string;
 }
 
-let notes: Note[] = [];
-let currentNote: Note | null = null;
-
-const initStorage = () => {
+const getStorageNotes = () => {
   const storageNotes = localStorage.getItem('notes');
+
   if (!storageNotes) {
     localStorage.setItem('notes', JSON.stringify([]));
+    return [];
   }
+
+  const parsedNotes = JSON.parse(storageNotes);
+  if (isNotes(parsedNotes)) {
+    return parsedNotes;
+  }
+
+  localStorage.setItem('notes', JSON.stringify([]));
+  return [];
 };
 
 const isNotes = (values: unknown): values is Note[] => {
@@ -52,24 +59,10 @@ const isNotes = (values: unknown): values is Note[] => {
   return false;
 };
 
-const createNoteTemplate = () => ({
-  id: notes.length > 0 ? notes[notes.length - 1].id + 1 : 1,
-  title: '제목',
-  body: '내용',
-  date: getTimestamp(),
-});
+const notes = getStorageNotes();
+let currentNote = notes.length > 0 ? notes[notes.length - 1] : null;
 
-const getTimestamp = () => new Date().toLocaleString();
-
-const addNote = () => {
-  // 오른쪽 노트 컨텐츠에 새로운 노트를 생성한다
-  const noteTemplate = createNoteTemplate();
-  notes.push(noteTemplate);
-  $noteTitle.value = noteTemplate.title;
-  $noteBody.value = noteTemplate.body;
-  $rightPanel.style.display = 'block';
-
-  // 왼쪽 노트 리스트에 새 노트를 추가한다
+const createNote = (note: Note) => {
   const $div = document.createElement('div');
   for (const $note of $noteList.children) {
     $note.classList.remove('active');
@@ -79,45 +72,44 @@ const addNote = () => {
     const $span = document.createElement('span');
     switch (i) {
       case 0:
-        $span.textContent = noteTemplate.title;
+        $span.textContent = note.title;
         $span.classList.add('title');
         break;
       case 1:
-        $span.textContent = noteTemplate.body;
+        $span.textContent = note.body;
         $span.classList.add('cont');
         break;
       case 2:
-        $span.textContent = noteTemplate.date;
+        $span.textContent = note.date;
         $span.classList.add('date');
         break;
     }
-    $div.appendChild($span);
+    $div.append($span);
   }
-  $noteList.appendChild($div);
-
-  // 로컬스토리지에 새 노트를 추가한다
-  localStorage.setItem('notes', JSON.stringify(notes));
+  $noteList.append($div);
 };
 
-const getStorageNotes = () => {
-  const storageNotes = localStorage.getItem('notes');
+const getTimestamp = () => new Date().toLocaleString();
 
-  if (!storageNotes) return [];
+const addNote = () => {
+  const newNote = {
+    id: notes.length > 0 ? notes[notes.length - 1].id + 1 : 1,
+    title: '제목',
+    body: '내용',
+    date: getTimestamp(),
+  };
 
-  const parsedNotes = JSON.parse(storageNotes);
-  if (isNotes(parsedNotes)) {
-    return parsedNotes;
-  }
-
-  return [];
+  currentNote = newNote;
+  notes.push(newNote);
+  localStorage.setItem('notes', JSON.stringify(notes));
+  createNote(newNote);
+  renderCurrentNote();
 };
 
 const renderNoteList = () => {
   notes.forEach(note => {
     const $div = document.createElement('div');
-    if (note.id === currentNote?.id) {
-      $div.classList.add('active');
-    }
+    $div.classList.toggle('active', note.id === currentNote?.id);
     $div.dataset.id = `${note.id}`;
     for (let i = 0; i < 3; i++) {
       const $span = document.createElement('span');
@@ -135,9 +127,9 @@ const renderNoteList = () => {
           $span.classList.add('date');
           break;
       }
-      $div.appendChild($span);
+      $div.append($span);
     }
-    $noteList.appendChild($div);
+    $noteList.append($div);
   });
 };
 
@@ -159,20 +151,21 @@ const openNote = (e: Event) => {
 
     currentNote = matchedNote;
     for (const $note of $noteList.children) {
-      $note.classList.remove('active');
+      if ($note instanceof HTMLElement) {
+        $note.classList.toggle(
+          'active',
+          Number($note.dataset.id) === currentNote.id
+        );
+      }
     }
-    currentTarget.classList.add('active');
     renderCurrentNote();
   }
 };
 
-initStorage();
-notes = getStorageNotes();
-currentNote = notes.length > 0 ? notes[notes.length - 1] : null;
 renderNoteList();
 renderCurrentNote();
 $addBtn.addEventListener('click', addNote);
 
-for (const note of $noteList.children) {
-  note.addEventListener('click', openNote);
+for (const $note of $noteList.children) {
+  $note.addEventListener('click', openNote);
 }
