@@ -1,19 +1,27 @@
-const addBtn = document.querySelector<HTMLButtonElement>('#add_btn');
-const noteList = document.querySelector<HTMLDivElement>('#note_list');
-const noteTitle = document.querySelector<HTMLInputElement>('#note_title');
-const noteBody = document.querySelector<HTMLTextAreaElement>('#note_body');
-const rightPanel = document.querySelector<HTMLDivElement>('#right');
+const $addBtn = document.querySelector<HTMLButtonElement>('#add_btn');
+const $noteList = document.querySelector<HTMLDivElement>('#note_list');
+const $rightPanel = document.querySelector<HTMLDivElement>('#right');
+const $noteTitle = $rightPanel?.querySelector<HTMLInputElement>('#note_title');
+const $noteBody = $rightPanel?.querySelector<HTMLTextAreaElement>('#note_body');
 
-if (!(noteTitle instanceof HTMLInputElement)) {
+if (!($addBtn instanceof HTMLButtonElement)) {
+  throw new Error('addBtn must be HTML Button Element');
+}
+
+if (!($noteList instanceof HTMLDivElement)) {
+  throw new Error('noteList must be HTML Div Element');
+}
+
+if (!($rightPanel instanceof HTMLDivElement)) {
+  throw new Error('rightPanel must be HTML Div Element');
+}
+
+if (!($noteTitle instanceof HTMLInputElement)) {
   throw new Error('noteTitle must be HTML Input Element');
 }
 
-if (!(noteBody instanceof HTMLTextAreaElement)) {
+if (!($noteBody instanceof HTMLTextAreaElement)) {
   throw new Error('noteBody must be HTML TextArea Element');
-}
-
-if (!(rightPanel instanceof HTMLDivElement)) {
-  throw new Error('rightPanel must be HTML Div Element');
 }
 
 interface Note {
@@ -57,37 +65,35 @@ const addNote = () => {
   // 오른쪽 노트 컨텐츠에 새로운 노트를 생성한다
   const noteTemplate = createNoteTemplate();
   notes.push(noteTemplate);
-  noteTitle.value = noteTemplate.title;
-  noteBody.value = noteTemplate.body;
-  rightPanel.style.display = 'block';
+  $noteTitle.value = noteTemplate.title;
+  $noteBody.value = noteTemplate.body;
+  $rightPanel.style.display = 'block';
 
   // 왼쪽 노트 리스트에 새 노트를 추가한다
-  const newNote = document.createElement('div');
-  if (noteList?.children) {
-    for (const note of noteList.children) {
-      note.classList.remove('active');
-    }
+  const $div = document.createElement('div');
+  for (const $note of $noteList.children) {
+    $note.classList.remove('active');
   }
-  newNote.classList.add('active');
+  $div.classList.add('active');
   for (let i = 0; i < 3; i++) {
-    const span = document.createElement('span');
+    const $span = document.createElement('span');
     switch (i) {
       case 0:
-        span.textContent = noteTemplate.title;
-        span.classList.add('title');
+        $span.textContent = noteTemplate.title;
+        $span.classList.add('title');
         break;
       case 1:
-        span.textContent = noteTemplate.body;
-        span.classList.add('cont');
+        $span.textContent = noteTemplate.body;
+        $span.classList.add('cont');
         break;
       case 2:
-        span.textContent = noteTemplate.date;
-        span.classList.add('date');
+        $span.textContent = noteTemplate.date;
+        $span.classList.add('date');
         break;
     }
-    newNote.appendChild(span);
+    $div.appendChild($span);
   }
-  noteList?.appendChild(newNote);
+  $noteList.appendChild($div);
 
   // 로컬스토리지에 새 노트를 추가한다
   localStorage.setItem('notes', JSON.stringify(notes));
@@ -108,38 +114,38 @@ const getStorageNotes = () => {
 
 const renderNoteList = () => {
   notes.forEach(note => {
-    const newDiv = document.createElement('div');
+    const $div = document.createElement('div');
     if (note.id === currentNote?.id) {
-      newDiv.classList.add('active');
+      $div.classList.add('active');
     }
-    newDiv.dataset.id = `${note.id}`;
+    $div.dataset.id = `${note.id}`;
     for (let i = 0; i < 3; i++) {
-      const span = document.createElement('span');
+      const $span = document.createElement('span');
       switch (i) {
         case 0:
-          span.textContent = note.title;
-          span.classList.add('title');
+          $span.textContent = note.title;
+          $span.classList.add('title');
           break;
         case 1:
-          span.textContent = note.body;
-          span.classList.add('cont');
+          $span.textContent = note.body;
+          $span.classList.add('cont');
           break;
         case 2:
-          span.textContent = note.date;
-          span.classList.add('date');
+          $span.textContent = note.date;
+          $span.classList.add('date');
           break;
       }
-      newDiv.appendChild(span);
+      $div.appendChild($span);
     }
-    noteList?.appendChild(newDiv);
+    $noteList.appendChild($div);
   });
 };
 
 const renderCurrentNote = () => {
   if (currentNote) {
-    noteTitle.value = currentNote.title;
-    noteBody.value = currentNote.body;
-    rightPanel.style.display = 'block';
+    $noteTitle.value = currentNote.title;
+    $noteBody.value = currentNote.body;
+    $rightPanel.style.display = 'block';
   }
 };
 
@@ -152,10 +158,8 @@ const openNote = (e: Event) => {
     if (!matchedNote) return;
 
     currentNote = matchedNote;
-    if (noteList?.children) {
-      for (const sibling of noteList.children) {
-        sibling.classList.remove('active');
-      }
+    for (const $note of $noteList.children) {
+      $note.classList.remove('active');
     }
     currentTarget.classList.add('active');
     renderCurrentNote();
@@ -167,10 +171,8 @@ notes = getStorageNotes();
 currentNote = notes.length > 0 ? notes[notes.length - 1] : null;
 renderNoteList();
 renderCurrentNote();
-addBtn?.addEventListener('click', addNote);
+$addBtn.addEventListener('click', addNote);
 
-if (noteList?.children) {
-  for (const note of noteList.children) {
-    note.addEventListener('click', openNote);
-  }
+for (const note of $noteList.children) {
+  note.addEventListener('click', openNote);
 }
