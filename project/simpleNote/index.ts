@@ -179,8 +179,8 @@ const updateNote = () => {
 
   notes.forEach(note => {
     if (note.id === currentNote?.id) {
-      note.title = currentNote.title;
-      note.body = currentNote.body;
+      note.title = currentNote.title || '제목';
+      note.body = currentNote.body || '내용';
       note.date = getTimestamp()
     }
   });
