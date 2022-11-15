@@ -68,6 +68,7 @@ const createNote = (note: Note) => {
     $note.classList.remove('active');
   }
   $div.classList.add('active');
+  $div.dataset.id = `${note.id}`;
   for (let i = 0; i < 3; i++) {
     const $span = document.createElement('span');
     switch (i) {
@@ -162,6 +163,32 @@ const openNote = (e: Event) => {
   }
 };
 
+const editNote = (e: Event) => {
+  if (!currentNote) return;
+  if (e.target instanceof HTMLInputElement) {
+    currentNote.title = e.target.value;
+  }
+  if (e.target instanceof HTMLTextAreaElement) {
+    currentNote.body = e.target.value;
+  }
+};
+
+const updateNote = () => {
+  if (!currentNote) return;
+
+  notes.forEach(note => {
+    if (note.id === currentNote?.id) {
+      note.title = currentNote.title;
+      note.body = currentNote.body;
+      note.date = getTimestamp()
+    }
+  });
+  localStorage.setItem('notes', JSON.stringify(notes));
+
+  $noteList.innerHTML = '';
+  renderNoteList();
+};
+
 renderNoteList();
 renderCurrentNote();
 $addBtn.addEventListener('click', addNote);
@@ -169,3 +196,9 @@ $addBtn.addEventListener('click', addNote);
 for (const $note of $noteList.children) {
   $note.addEventListener('click', openNote);
 }
+
+$noteTitle.addEventListener('input', editNote);
+$noteBody.addEventListener('input', editNote);
+
+$noteTitle.addEventListener('change', updateNote);
+$noteBody.addEventListener('change', updateNote);
