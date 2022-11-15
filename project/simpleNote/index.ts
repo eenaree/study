@@ -143,10 +143,11 @@ const renderCurrentNote = () => {
 };
 
 const openNote = (e: Event) => {
-  if (e.currentTarget instanceof HTMLElement) {
-    const currentTarget = e.currentTarget;
+  if (e.target instanceof HTMLElement) {
+    const $realTarget = e.target.closest('div');
+    if (!($realTarget instanceof HTMLElement)) return;
     const matchedNote = notes.find(
-      value => value.id === Number(currentTarget.dataset.id)
+      value => value.id === Number($realTarget.dataset.id)
     );
     if (!matchedNote) return;
 
@@ -193,9 +194,7 @@ renderNoteList();
 renderCurrentNote();
 $addBtn.addEventListener('click', addNote);
 
-for (const $note of $noteList.children) {
-  $note.addEventListener('click', openNote);
-}
+$noteList.addEventListener('click', openNote);
 
 $noteTitle.addEventListener('input', editNote);
 $noteBody.addEventListener('input', editNote);
