@@ -80,11 +80,11 @@ const createNote = (note: Note) => {
     const $span = document.createElement('span');
     switch (i) {
       case 0:
-        $span.textContent = note.title;
+        $span.textContent = note.title || '제목을 입력하세요';
         $span.classList.add('title');
         break;
       case 1:
-        $span.textContent = note.body;
+        $span.textContent = note.body || '내용을 입력하세요';
         $span.classList.add('cont');
         break;
       case 2:
@@ -106,8 +106,8 @@ const getTimestamp = () => new Date().toLocaleString();
 const addNote = () => {
   const newNote = {
     id: notes.length > 0 ? notes[notes.length - 1].id + 1 : 1,
-    title: '제목',
-    body: '내용',
+    title: '',
+    body: '',
     date: getTimestamp(),
   };
 
@@ -127,11 +127,11 @@ const renderNoteList = () => {
       const $span = document.createElement('span');
       switch (i) {
         case 0:
-          $span.textContent = note.title;
+          $span.textContent = note.title || '제목을 입력하세요';
           $span.classList.add('title');
           break;
         case 1:
-          $span.textContent = note.body;
+          $span.textContent = note.body || '내용을 입력하세요';
           $span.classList.add('cont');
           break;
         case 2:
@@ -198,8 +198,8 @@ const updateNote = () => {
 
   notes.forEach(note => {
     if (note.id === currentNote?.id) {
-      note.title = currentNote.title || '제목';
-      note.body = currentNote.body || '내용';
+      note.title = currentNote.title;
+      note.body = currentNote.body;
       note.date = getTimestamp();
     }
   });
@@ -214,8 +214,8 @@ const updateNote = () => {
 
     if ($note instanceof HTMLElement) {
       if (Number($note.dataset.id) !== currentNote.id) continue;
-      title.textContent = currentNote?.title;
-      cont.textContent = currentNote?.body;
+      title.textContent = currentNote?.title || '제목을 입력하세요';
+      cont.textContent = currentNote?.body || '내용을 입력하세요';
       date.textContent = currentNote?.date;
     }
   }
