@@ -33,12 +33,25 @@ main {
 }
 
 #note_list div {
+  position: relative;
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
   margin-bottom: 1rem;
   border-radius: 4px;
   background-color: linen;
+  cursor: pointer;
+}
+
+#note_list button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  height: 30px;
+  padding: 0 1rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -97,4 +110,42 @@ main {
   font-size: 1.2rem;
   resize: none;
   overflow: auto;
+}
+
+#modal {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.4);
+}
+
+#modal_dialog {
+  display: flex;
+  height: 100%;
+}
+
+.delete_modal {
+  width: 300px;
+  margin: auto;
+  max-height: calc(100% - 4rem);
+  border-radius: 4px;
+  background: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+.delete_modal p {
+  padding: 2rem 0;
+  font-weight: 700;
+}
+
+.delete_modal button {
+  height: 40px;
+  width: 100px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
 }

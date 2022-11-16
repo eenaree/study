@@ -3,6 +3,9 @@ const $noteList = document.querySelector<HTMLDivElement>('#note_list');
 const $rightPanel = document.querySelector<HTMLDivElement>('#right');
 const $noteTitle = $rightPanel?.querySelector<HTMLInputElement>('#note_title');
 const $noteBody = $rightPanel?.querySelector<HTMLTextAreaElement>('#note_body');
+const $modal = document.getElementById('modal');
+const $deleteBtn = $modal?.querySelector<HTMLButtonElement>('.delete');
+const $deleteCancelBtn = $modal?.querySelector<HTMLButtonElement>('.cancel');
 
 if (!($addBtn instanceof HTMLButtonElement)) {
   throw new Error('addBtn must be HTML Button Element');
@@ -22,6 +25,10 @@ if (!($noteTitle instanceof HTMLInputElement)) {
 
 if (!($noteBody instanceof HTMLTextAreaElement)) {
   throw new Error('noteBody must be HTML TextArea Element');
+}
+
+if (!($modal instanceof HTMLDivElement)) {
+  throw new Error('modal must be HTML Div Element');
 }
 
 interface Note {
@@ -87,6 +94,10 @@ const createNote = (note: Note) => {
     }
     $div.append($span);
   }
+  const $button = document.createElement('button');
+  $button.textContent = '삭제';
+  $button.addEventListener('click', openModal);
+  $div.append($button);
   $noteList.append($div);
 };
 
@@ -130,6 +141,10 @@ const renderNoteList = () => {
       }
       $div.append($span);
     }
+    const $button = document.createElement('button');
+    $button.textContent = '삭제';
+    $button.addEventListener('click', openModal);
+    $div.append($button);
     $noteList.append($div);
   });
 };
@@ -139,6 +154,10 @@ const renderCurrentNote = () => {
     $noteTitle.value = currentNote.title;
     $noteBody.value = currentNote.body;
     $rightPanel.hidden = false;
+  } else {
+    $noteTitle.value = '';
+    $noteBody.value = '';
+    $rightPanel.hidden = true;
   }
 };
 
@@ -202,6 +221,37 @@ const updateNote = () => {
   }
 };
 
+const openModal = () => {
+  $modal.hidden = false;
+};
+
+const closeModal = () => {
+  $modal.hidden = true;
+};
+
+const deleteNote = (e: Event) => {
+  if (e.target instanceof HTMLElement) {
+    const matchedNoteIndex = notes.findIndex(
+      note => note.id === currentNote?.id
+    );
+    if (matchedNoteIndex === -1) return;
+
+    for (const $note of $noteList.children) {
+      if ($note instanceof HTMLElement) {
+        if (Number($note.dataset.id) !== currentNote?.id) continue;
+        $note.remove();
+        $noteList.lastElementChild?.classList.add('active');
+        break;
+      }
+    }
+    notes.splice(matchedNoteIndex, 1);
+    localStorage.setItem('notes', JSON.stringify(notes));
+    currentNote = notes.length > 0 ? notes[notes.length - 1] : null;
+    renderCurrentNote();
+    closeModal();
+  }
+};
+
 renderNoteList();
 renderCurrentNote();
 $addBtn.addEventListener('click', addNote);
@@ -213,3 +263,6 @@ $noteBody.addEventListener('input', editNote);
 
 $noteTitle.addEventListener('change', updateNote);
 $noteBody.addEventListener('change', updateNote);
+
+$deleteBtn?.addEventListener('click', deleteNote);
+$deleteCancelBtn?.addEventListener('click', closeModal);
