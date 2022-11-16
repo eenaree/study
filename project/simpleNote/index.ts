@@ -181,13 +181,25 @@ const updateNote = () => {
     if (note.id === currentNote?.id) {
       note.title = currentNote.title || '제목';
       note.body = currentNote.body || '내용';
-      note.date = getTimestamp()
+      note.date = getTimestamp();
     }
   });
   localStorage.setItem('notes', JSON.stringify(notes));
 
-  $noteList.innerHTML = '';
-  renderNoteList();
+  for (const $note of $noteList.children) {
+    const title = $note.querySelector('.title');
+    const cont = $note.querySelector('.cont');
+    const date = $note.querySelector('.date');
+
+    if (!(title && cont && date)) return;
+
+    if ($note instanceof HTMLElement) {
+      if (Number($note.dataset.id) !== currentNote.id) continue;
+      title.textContent = currentNote?.title;
+      cont.textContent = currentNote?.body;
+      date.textContent = currentNote?.date;
+    }
+  }
 };
 
 renderNoteList();
