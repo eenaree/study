@@ -138,7 +138,7 @@ const renderCurrentNote = () => {
   if (currentNote) {
     $noteTitle.value = currentNote.title;
     $noteBody.value = currentNote.body;
-    $rightPanel.style.display = 'block';
+    $rightPanel.hidden = false;
   }
 };
 
