@@ -98,7 +98,7 @@ const createNote = (note: Note) => {
   $button.textContent = '삭제';
   $button.addEventListener('click', openModal);
   $div.append($button);
-  $noteList.append($div);
+  $noteList.prepend($div);
 };
 
 const getTimestamp = () => new Date().toLocaleString();
@@ -145,7 +145,7 @@ const renderNoteList = () => {
     $button.textContent = '삭제';
     $button.addEventListener('click', openModal);
     $div.append($button);
-    $noteList.append($div);
+    $noteList.prepend($div);
   });
 };
 
@@ -240,7 +240,7 @@ const deleteNote = (e: Event) => {
       if ($note instanceof HTMLElement) {
         if (Number($note.dataset.id) !== currentNote?.id) continue;
         $note.remove();
-        $noteList.lastElementChild?.classList.add('active');
+        $noteList.firstElementChild?.classList.add('active');
         break;
       }
     }
