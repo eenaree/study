@@ -6,7 +6,8 @@ const $noteBody = $rightPanel?.querySelector<HTMLTextAreaElement>('#note_body');
 const $modal = document.getElementById('modal');
 const $deleteBtn = $modal?.querySelector<HTMLButtonElement>('.delete');
 const $deleteCancelBtn = $modal?.querySelector<HTMLButtonElement>('.cancel');
-const $allClearBtn = document.querySelector<HTMLButtonElement>('#all_clear_btn');
+const $allClearBtn =
+  document.querySelector<HTMLButtonElement>('#all_clear_btn');
 
 if (!($addBtn instanceof HTMLButtonElement)) {
   throw new Error('addBtn must be HTML Button Element');
@@ -257,12 +258,13 @@ const deleteNote = (e: Event) => {
   }
 };
 
-const deleteNotes = () => {
+const init = () => {
   notes.splice(0);
   currentNote = null;
+  localStorage.setItem('notes', JSON.stringify(notes));
   $noteList.innerHTML = '';
   renderCurrentNote();
-}
+};
 
 renderNoteList();
 renderCurrentNote();
@@ -278,4 +280,4 @@ $noteBody.addEventListener('change', updateNote);
 
 $deleteBtn?.addEventListener('click', deleteNote);
 $deleteCancelBtn?.addEventListener('click', closeModal);
-$allClearBtn.addEventListener('click', deleteNotes);
+$allClearBtn.addEventListener('click', init);
