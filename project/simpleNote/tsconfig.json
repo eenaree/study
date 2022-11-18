@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "target": "es6",
+    "module": "es2022",
+    "moduleResolution": "node",
+    "lib": ["dom", "dom.iterable", "es2022"],
+    "strict": true,
+    "downlevelIteration": true
+  },
+  "include": ["src/**/*"]
+}

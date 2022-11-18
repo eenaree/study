@@ -2,11 +2,11 @@
 const $addBtn = document.querySelector('#add_btn');
 const $noteList = document.querySelector('#note_list');
 const $rightPanel = document.querySelector('#right');
-const $noteTitle = $rightPanel?.querySelector('#note_title');
-const $noteBody = $rightPanel?.querySelector('#note_body');
+const $noteTitle = $rightPanel === null || $rightPanel === void 0 ? void 0 : $rightPanel.querySelector('#note_title');
+const $noteBody = $rightPanel === null || $rightPanel === void 0 ? void 0 : $rightPanel.querySelector('#note_body');
 const $modal = document.getElementById('modal');
-const $deleteBtn = $modal?.querySelector('.delete');
-const $deleteCancelBtn = $modal?.querySelector('.cancel');
+const $deleteBtn = $modal === null || $modal === void 0 ? void 0 : $modal.querySelector('.delete');
+const $deleteCancelBtn = $modal === null || $modal === void 0 ? void 0 : $modal.querySelector('.cancel');
 const $allClearBtn = document.querySelector('#all_clear_btn');
 if (!($addBtn instanceof HTMLButtonElement)) {
     throw new Error('addBtn must be HTML Button Element');
@@ -98,7 +98,7 @@ const addNote = () => {
 const renderNoteList = () => {
     notes.forEach(note => {
         const $div = document.createElement('div');
-        $div.classList.toggle('active', note.id === currentNote?.id);
+        $div.classList.toggle('active', note.id === (currentNote === null || currentNote === void 0 ? void 0 : currentNote.id));
         $div.dataset.id = `${note.id}`;
         for (let i = 0; i < 3; i++) {
             const $span = document.createElement('span');
@@ -168,7 +168,7 @@ const updateNote = () => {
     if (!currentNote)
         return;
     notes.forEach(note => {
-        if (note.id === currentNote?.id) {
+        if (note.id === (currentNote === null || currentNote === void 0 ? void 0 : currentNote.id)) {
             note.title = currentNote.title;
             note.body = currentNote.body;
             note.date = getTimestamp();
@@ -184,9 +184,9 @@ const updateNote = () => {
         if ($note instanceof HTMLElement) {
             if (Number($note.dataset.id) !== currentNote.id)
                 continue;
-            title.textContent = currentNote?.title || '제목을 입력하세요';
-            cont.textContent = currentNote?.body || '내용을 입력하세요';
-            date.textContent = currentNote?.date;
+            title.textContent = (currentNote === null || currentNote === void 0 ? void 0 : currentNote.title) || '제목을 입력하세요';
+            cont.textContent = (currentNote === null || currentNote === void 0 ? void 0 : currentNote.body) || '내용을 입력하세요';
+            date.textContent = currentNote === null || currentNote === void 0 ? void 0 : currentNote.date;
         }
     }
 };
@@ -197,16 +197,17 @@ const closeModal = () => {
     $modal.hidden = true;
 };
 const deleteNote = (e) => {
+    var _a;
     if (e.target instanceof HTMLElement) {
-        const matchedNoteIndex = notes.findIndex(note => note.id === currentNote?.id);
+        const matchedNoteIndex = notes.findIndex(note => note.id === (currentNote === null || currentNote === void 0 ? void 0 : currentNote.id));
         if (matchedNoteIndex === -1)
             return;
         for (const $note of $noteList.children) {
             if ($note instanceof HTMLElement) {
-                if (Number($note.dataset.id) !== currentNote?.id)
+                if (Number($note.dataset.id) !== (currentNote === null || currentNote === void 0 ? void 0 : currentNote.id))
                     continue;
                 $note.remove();
-                $noteList.firstElementChild?.classList.add('active');
+                (_a = $noteList.firstElementChild) === null || _a === void 0 ? void 0 : _a.classList.add('active');
                 break;
             }
         }
@@ -217,9 +218,10 @@ const deleteNote = (e) => {
         closeModal();
     }
 };
-const deleteNotes = () => {
+const init = () => {
     notes.splice(0);
     currentNote = null;
+    localStorage.setItem('notes', JSON.stringify(notes));
     $noteList.innerHTML = '';
     renderCurrentNote();
 };
@@ -231,6 +233,6 @@ $noteTitle.addEventListener('input', editNote);
 $noteBody.addEventListener('input', editNote);
 $noteTitle.addEventListener('change', updateNote);
 $noteBody.addEventListener('change', updateNote);
-$deleteBtn?.addEventListener('click', deleteNote);
-$deleteCancelBtn?.addEventListener('click', closeModal);
-$allClearBtn.addEventListener('click', deleteNotes);
+$deleteBtn === null || $deleteBtn === void 0 ? void 0 : $deleteBtn.addEventListener('click', deleteNote);
+$deleteCancelBtn === null || $deleteCancelBtn === void 0 ? void 0 : $deleteCancelBtn.addEventListener('click', closeModal);
+$allClearBtn.addEventListener('click', init);

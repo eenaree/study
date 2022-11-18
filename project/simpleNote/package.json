@@ -1,0 +1,15 @@
+{
+  "name": "simple-note",
+  "version": "1.0.0",
+  "description": "make own simple note",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc"
+  },
+  "author": "eenaree",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.9.3"
+  }
+}
