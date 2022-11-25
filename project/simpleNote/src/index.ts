@@ -1,7 +1,6 @@
 import app from './app.js';
 import {
   closeModal,
-  toggleActiveClassView,
   updateNoteListView,
   updateNotePreviewView,
 } from './view.js';
@@ -12,9 +11,8 @@ const $notePreview = document.getElementById('note_preview');
 const $modal = document.getElementById('modal');
 const $allClearBtn = document.getElementById('all_clear_btn');
 
-updateNoteListView(app.getNotes());
+updateNoteListView(app.getNotes(), app.getActiveNoteId());
 updateNotePreviewView(app.getActiveNote());
-toggleActiveClassView(app.getActiveNote()?.id);
 
 $addBtn?.addEventListener('click', () => {
   app.addNote({
@@ -24,9 +22,8 @@ $addBtn?.addEventListener('click', () => {
     date: new Date().toLocaleString(),
   });
 
-  updateNoteListView(app.getNotes());
+  updateNoteListView(app.getNotes(), app.getActiveNoteId());
   updateNotePreviewView(app.getActiveNote());
-  toggleActiveClassView(app.getActiveNote()?.id);
 });
 
 $noteList?.addEventListener('click', e => {
@@ -38,8 +35,8 @@ $noteList?.addEventListener('click', e => {
   const selectId = Number($selectNote.dataset.id);
   app.selectNote(selectId);
 
+  updateNoteListView(app.getNotes(), app.getActiveNoteId());
   updateNotePreviewView(app.getActiveNote());
-  toggleActiveClassView(app.getActiveNote()?.id);
 });
 
 $notePreview?.addEventListener('change', ({ target }) => {
@@ -51,8 +48,7 @@ $notePreview?.addEventListener('change', ({ target }) => {
     app.updateNote({ body: target.value });
   }
 
-  updateNoteListView(app.getNotes());
-  toggleActiveClassView(app.getActiveNote()?.id);
+  updateNoteListView(app.getNotes(), app.getActiveNoteId());
 });
 
 $modal?.addEventListener('click', ({ target }) => {
@@ -61,9 +57,8 @@ $modal?.addEventListener('click', ({ target }) => {
   if (target.classList.contains('delete')) {
     app.removeNote();
 
-    updateNoteListView(app.getNotes());
+    updateNoteListView(app.getNotes(), app.getActiveNoteId());
     updateNotePreviewView(app.getActiveNote());
-    toggleActiveClassView(app.getActiveNote()?.id);
   }
 
   closeModal();
@@ -72,6 +67,6 @@ $modal?.addEventListener('click', ({ target }) => {
 $allClearBtn?.addEventListener('click', () => {
   app.resetNote();
 
-  updateNoteListView(app.getNotes());
+  updateNoteListView(app.getNotes(), app.getActiveNoteId());
   updateNotePreviewView(app.getActiveNote());
 });

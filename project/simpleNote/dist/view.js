@@ -24,13 +24,11 @@ export const closeModal = () => {
     $modalDialog.innerHTML = '';
     $modal.hidden = true;
 };
-export const updateNoteListView = (notes) => {
-    if (!($noteList instanceof HTMLElement)) {
-        throw new Error('noteList must be an HTML element');
-    }
-    $noteList.innerHTML = '';
-    notes.forEach((note, index) => {
+export const updateNoteListView = (notes, activeId) => {
+    const list = [];
+    notes.forEach(note => {
         const $div = document.createElement('div');
+        $div.classList.toggle('active', note.id === activeId);
         $div.dataset.id = `${note.id}`;
         for (let i = 0; i < 3; i++) {
             const $span = document.createElement('span');
@@ -54,15 +52,17 @@ export const updateNoteListView = (notes) => {
         $button.textContent = '삭제';
         $button.addEventListener('click', openDeleteModal);
         $div.append($button);
-        $noteList === null || $noteList === void 0 ? void 0 : $noteList.prepend($div);
+        list.push($div);
     });
+    list.sort((a, b) => Number(b.dataset.id) - Number(a.dataset.id));
+    $noteList === null || $noteList === void 0 ? void 0 : $noteList.replaceChildren(...list);
 };
 export const updateNotePreviewView = (note) => {
     if (!($notePreview instanceof HTMLElement)) {
         throw new Error('notePreview must be an HTML element');
     }
     if (!note) {
-        $notePreview.innerHTML = '';
+        $notePreview.replaceChildren();
         return;
     }
     const input = document.createElement('input');
@@ -73,18 +73,5 @@ export const updateNotePreviewView = (note) => {
     textarea.id = 'note_body';
     textarea.placeholder = '내용을 입력하세요';
     textarea.value = note.body;
-    $notePreview.innerHTML = '';
-    $notePreview.append(input, textarea);
-};
-export const toggleActiveClassView = (noteId) => {
-    if (!($noteList instanceof HTMLElement)) {
-        throw new Error('noteList must be an HTML element');
-    }
-    if (!noteId)
-        return;
-    Array.from($noteList.children).forEach($note => {
-        if (!($note instanceof HTMLElement))
-            return;
-        $note.classList.toggle('active', Number($note.dataset.id) === noteId);
-    });
+    $notePreview.replaceChildren(input, textarea);
 };

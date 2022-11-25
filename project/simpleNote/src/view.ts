@@ -31,14 +31,12 @@ export const closeModal = () => {
   $modal.hidden = true;
 };
 
-export const updateNoteListView = (notes: Note[]) => {
-  if (!($noteList instanceof HTMLElement)) {
-    throw new Error('noteList must be an HTML element');
-  }
+export const updateNoteListView = (notes: Note[], activeId?: number) => {
+  const list: HTMLDivElement[] = [];
 
-  $noteList.innerHTML = '';
-  notes.forEach((note, index) => {
+  notes.forEach(note => {
     const $div = document.createElement('div');
+    $div.classList.toggle('active', note.id === activeId);
     $div.dataset.id = `${note.id}`;
     for (let i = 0; i < 3; i++) {
       const $span = document.createElement('span');
@@ -62,17 +60,22 @@ export const updateNoteListView = (notes: Note[]) => {
     $button.textContent = '삭제';
     $button.addEventListener('click', openDeleteModal);
     $div.append($button);
-    $noteList?.prepend($div);
+    list.push($div);
   });
+
+  list.sort((a, b) => Number(b.dataset.id) - Number(a.dataset.id));
+  $noteList?.replaceChildren(...list);
 };
 
-export const updateNotePreviewView = (note: Note | undefined) => {
+export const updateNotePreviewView = (
+  note: { title: string; body: string } | undefined
+) => {
   if (!($notePreview instanceof HTMLElement)) {
     throw new Error('notePreview must be an HTML element');
   }
 
   if (!note) {
-    $notePreview.innerHTML = '';
+    $notePreview.replaceChildren();
     return;
   }
 
@@ -85,20 +88,5 @@ export const updateNotePreviewView = (note: Note | undefined) => {
   textarea.placeholder = '내용을 입력하세요';
   textarea.value = note.body;
 
-  $notePreview.innerHTML = '';
-  $notePreview.append(input, textarea);
-};
-
-export const toggleActiveClassView = (noteId: number | undefined) => {
-  if (!($noteList instanceof HTMLElement)) {
-    throw new Error('noteList must be an HTML element');
-  }
-
-  if (!noteId) return;
-
-  Array.from($noteList.children).forEach($note => {
-    if (!($note instanceof HTMLElement)) return;
-
-    $note.classList.toggle('active', Number($note.dataset.id) === noteId);
-  });
+  $notePreview.replaceChildren(input, textarea);
 };

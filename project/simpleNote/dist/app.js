@@ -18,7 +18,12 @@ let activeNote = notes.length > 0 ? notes[notes.length - 1] : undefined;
 const app = {
     getNotes: () => [...notes],
     getActiveNote: () => {
-        return activeNote ? Object.assign({}, activeNote) : undefined;
+        return activeNote
+            ? { title: activeNote.title, body: activeNote.body }
+            : undefined;
+    },
+    getActiveNoteId: () => {
+        return activeNote ? activeNote.id : undefined;
     },
     getNextNoteId: () => {
         return notes.length > 0 ? notes[notes.length - 1].id + 1 : 1;
