@@ -10,7 +10,7 @@
   - [indexOf](https://eenaree.github.io/study/js/array/indexOf)
   - [reverse](https://eenaree.github.io/study/js/array/reverse)
   - [pop](https://eenaree.github.io/study/js/array/pop)
-  - [shift](https://eenaree.github.io/study/js/array/join/shift)
+  - [shift](https://eenaree.github.io/study/js/array/shift)
 
 - [객체의 얕은 복사, 깊은 복사](https://eenaree.github.io/study/js/object_copy)
 
